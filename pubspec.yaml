@@ -6,9 +6,8 @@ repository: https://github.com/Flutterlumin/window_toolkit.git
 license: MIT 
 topics:
   - window
-  - window_managment
+  - window-managment
   - titlebar
-
 
 environment:
   sdk: ^3.5.3
