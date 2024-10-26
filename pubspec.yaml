@@ -1,0 +1,35 @@
+name: window_toolkit
+description: "Toolkit simplifies customization of native user interface components for macOS applications."
+version: 0.0.1 
+homepage: https://github.com/Flutterlumin/
+repository: https://github.com/Flutterlumin/window_toolkit.git
+license: MIT 
+topics:
+  - window
+  - window_managment
+  - titlebar
+
+
+environment:
+  sdk: ^3.5.3
+  flutter: '>=3.3.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  plugin_platform_interface: ^2.1.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  dependency_validator: ^3.0.0
+
+flutter:
+  plugin:
+    platforms:
+      macos:
+        pluginClass: WindowToolkitPlugin
+
+platforms:
+  macos:
