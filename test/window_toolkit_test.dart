@@ -4,10 +4,7 @@ import 'package:window_toolkit/window_toolkit_platform_interface.dart';
 import 'package:window_toolkit/window_toolkit_method_channel.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-class MockWindowToolkitPlatform
-    with MockPlatformInterfaceMixin
-    implements WindowToolkitPlatform {
-
+class MockWindowToolkitPlatform with MockPlatformInterfaceMixin implements WindowToolkitPlatform {
   @override
   Future<String?> getPlatformVersion() => Future.value('42');
 }
@@ -20,7 +17,7 @@ void main() {
   });
 
   test('getPlatformVersion', () async {
-    WindowToolkit windowToolkitPlugin = WindowToolkit();
+    WindowToolkit windowToolkitPlugin = WindowToolkit.instance;
     MockWindowToolkitPlatform fakePlatform = MockWindowToolkitPlatform();
     WindowToolkitPlatform.instance = fakePlatform;
 

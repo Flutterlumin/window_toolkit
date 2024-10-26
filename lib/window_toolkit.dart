@@ -1,7 +1,7 @@
-import 'window_toolkit_platform_interface.dart';
+library;
 
-class WindowToolkit {
-  Future<String?> getPlatformVersion() {
-    return WindowToolkitPlatform.instance.getPlatformVersion();
-  }
-}
+export 'src/utils/calculate_window_position.dart';
+export 'src/titlebar.dart';
+export 'src/titlebar_style.dart';
+export 'src/window_toolkit.dart';
+export 'src/window.dart';
