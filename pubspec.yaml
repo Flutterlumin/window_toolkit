@@ -1,6 +1,6 @@
 name: window_toolkit
 description: "Toolkit simplifies customization of native user interface components for macOS applications."
-version: 0.1.0 
+version: 0.1.1 
 homepage: https://github.com/Flutterlumin/window_toolkit
 repository: https://github.com/Flutterlumin/window_toolkit.git
 license: MIT 
