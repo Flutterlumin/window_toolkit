@@ -12,9 +12,11 @@ Below is a screenshot of the example app using `window_toolkit`:
 
 <div align="center">
   <a href="https://github.com/Flutterlumin/window_toolkit.git">
-    <img src="assets/images/example_app_screenshot.png" alt="Example App Screenshot" />
+    <img src="https://github.com/Flutterlumin/window_toolkit/raw/main/assets/images/example_app_screenshot.png" alt="Example App Screenshot" />
   </a>
 </div>
+
+
 
 
 
