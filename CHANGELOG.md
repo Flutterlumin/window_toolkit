@@ -1,3 +1,11 @@
+## 0.1.1
+
+- **Enhancements**:
+  - **Current Window Tracking**: Implemented a mechanism within `WindowToolkit` to keep track of the current window instance.
+  - **Fullscreen Control Logic**: Updated the `fullscreen` method to prevent entering fullscreen mode when a maximum size is defined.
+  - **Dynamic Position Calculation**: Improved the `calculateWindowPosition` function to ensure it uses `double` instead of `num` for dimensions.
+  - **Performance Optimizations**: Made various optimizations across window property management and alignment calculations.
+
 ## 0.1.0
 
 - **Features**:

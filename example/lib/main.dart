@@ -7,7 +7,7 @@ Future<void> main() async {
   await toolkit.initialize();
   await toolkit.titlebar(Titlebar(style: TitlebarStyle.expand));
   await toolkit.window(
-    Window(maximumSize: Size(1000, 800), minimumSize: Size(800, 700), size: (Size(800, 700)), center: true),
+    Window(minimumSize: Size(800, 700), size: (Size(800, 700)), center: true),
   );
 
   runApp(App());
@@ -178,7 +178,6 @@ class _HomeState extends State<Home> {
     );
   }
 }
-
 
 // import 'package:flutter/material.dart';
 // import 'dart:async';
