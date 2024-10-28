@@ -81,7 +81,8 @@ class _HomeState extends State<Home> {
                     },
                   ),
                   Text(
-                    style.toString().split('.').last[0].toUpperCase() + style.toString().split('.').last.substring(1),
+                    style.toString().split('.').last[0].toUpperCase() +
+                        style.toString().split('.').last.substring(1),
                   )
                 ],
               ),
@@ -107,10 +108,13 @@ class _HomeState extends State<Home> {
               'Maximize',
               () async {
                 bool isMaximized = await _toolkit.check.maximized();
-                isMaximized ? _toolkit.perform.unmaximize() : _toolkit.perform.maximize();
+                isMaximized
+                    ? _toolkit.perform.unmaximize()
+                    : _toolkit.perform.maximize();
               },
             ),
-            _buildActionButton('Fullscreen', () => _toolkit.perform.fullscreen()),
+            _buildActionButton(
+                'Fullscreen', () => _toolkit.perform.fullscreen()),
           ],
         ),
       ],
@@ -125,10 +129,14 @@ class _HomeState extends State<Home> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _buildToggleActionButton('Movable', _toolkit.define.movable, _toolkit.check.movable),
-            _buildToggleActionButton('Closable', _toolkit.define.closable, _toolkit.check.closable),
-            _buildToggleActionButton('Minimizable', _toolkit.define.minimizable, _toolkit.check.minimizable),
-            _buildToggleActionButton('Maximizable', _toolkit.define.maximizable, _toolkit.check.maximizable),
+            _buildToggleActionButton(
+                'Movable', _toolkit.define.movable, _toolkit.check.movable),
+            _buildToggleActionButton(
+                'Closable', _toolkit.define.closable, _toolkit.check.closable),
+            _buildToggleActionButton('Minimizable', _toolkit.define.minimizable,
+                _toolkit.check.minimizable),
+            _buildToggleActionButton('Maximizable', _toolkit.define.maximizable,
+                _toolkit.check.maximizable),
           ],
         ),
       ],
@@ -142,7 +150,8 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _buildToggleActionButton(String text, Future<void> Function(bool) define, Future<bool> Function() check) {
+  Widget _buildToggleActionButton(String text,
+      Future<void> Function(bool) define, Future<bool> Function() check) {
     return FutureBuilder<bool>(
       future: check(),
       builder: (context, snapshot) {
@@ -178,66 +187,3 @@ class _HomeState extends State<Home> {
     );
   }
 }
-
-// import 'package:flutter/material.dart';
-// import 'dart:async';
-
-// import 'package:flutter/services.dart';
-// import 'package:window_toolkit/window_toolkit.dart';
-
-// void main() {
-//   runApp(const MyApp());
-// }
-
-// class MyApp extends StatefulWidget {
-//   const MyApp({super.key});
-
-//   @override
-//   State<MyApp> createState() => _MyAppState();
-// }
-
-// class _MyAppState extends State<MyApp> {
-//   String _platformVersion = 'Unknown';
-//   final _windowToolkitPlugin = WindowToolkit();
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     initPlatformState();
-//   }
-
-//   // Platform messages are asynchronous, so we initialize in an async method.
-//   Future<void> initPlatformState() async {
-//     String platformVersion;
-//     // Platform messages may fail, so we use a try/catch PlatformException.
-//     // We also handle the message potentially returning null.
-//     try {
-//       platformVersion = await _windowToolkitPlugin.getPlatformVersion() ?? 'Unknown platform version';
-//     } on PlatformException {
-//       platformVersion = 'Failed to get platform version.';
-//     }
-
-//     // If the widget was removed from the tree while the asynchronous platform
-//     // message was in flight, we want to discard the reply rather than calling
-//     // setState to update our non-existent appearance.
-//     if (!mounted) return;
-
-//     setState(() {
-//       _platformVersion = platformVersion;
-//     });
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       home: Scaffold(
-//         appBar: AppBar(
-//           title: const Text('Plugin example app'),
-//         ),
-//         body: Center(
-//           child: Text('Running on: $_platformVersion\n'),
-//         ),
-//       ),
-//     );
-//   }
-// }
