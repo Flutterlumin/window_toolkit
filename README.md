@@ -47,7 +47,7 @@ To use window_toolkit, add it to your 'pubspec.yaml':
 
 ```yaml
 dependencies:
-  window_toolkit: ^0.1.2
+  window_toolkit: ^0.1.3
 ```
 
 Alternatively, add it directly from GitHub:

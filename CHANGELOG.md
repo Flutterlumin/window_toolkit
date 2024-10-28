@@ -1,3 +1,8 @@
+## 0.1.3
+
+- **Enhancements**:
+  - **Example App Screenshot**: The Sowcase screenshot url has been updated.
+
 ## 0.1.2
 
 - **Enhancements**:
