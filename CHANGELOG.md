@@ -1,3 +1,9 @@
+## 0.1.2
+
+- **Enhancements**:
+  - **Example App Screenshot**: Added a screenshot of the example app to the README for better visual representation.
+  - **Dart Formatting**: Updated code formatting in `WindowToolkit` and `calculateWindowPosition` to meet Dart standards.
+
 ## 0.1.1
 
 - **Enhancements**:

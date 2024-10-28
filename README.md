@@ -6,6 +6,18 @@
 [pub-url]: https://pub.dev/packages/window_toolkit
 
 
+## Showcase
+
+Below is a screenshot of the example app using `window_toolkit`:
+
+<div align="center">
+  <a href="https://github.com/Flutterlumin/window_toolkit.git">
+    <img src="assets/images/example_app_screenshot.png" alt="Example App Screenshot" />
+  </a>
+</div>
+
+
+
 The **window_toolkit** is a Flutter plugin for macOS that simplifies customization of native window properties. It enables developers to control window behavior, style, and UI components like title bars, window alignment, resizing, and opacity. Future platform support is planned, making it adaptable for cross-platform development.
 
 
@@ -33,7 +45,7 @@ To use window_toolkit, add it to your 'pubspec.yaml':
 
 ```yaml
 dependencies:
-  window_toolkit: ^0.1.1
+  window_toolkit: ^0.1.2
 ```
 
 Alternatively, add it directly from GitHub:

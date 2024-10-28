@@ -45,6 +45,7 @@ class WindowToolkit {
   /// Initializes the window toolkit.
   Future<void> initialize([VoidCallback? callback]) async {
     await _channel.invokeMethod('initialize');
+    if (callback != null) callback;
   }
 
   /// Configures the title bar properties.
@@ -203,37 +204,56 @@ class Check {
   Check();
 
   /// Checks if the window is closable.
-  Future<bool> closable() async => await WindowToolkit.instance._channel.invokeMethod('get_closable');
+  Future<bool> closable() async {
+    return await WindowToolkit.instance._channel.invokeMethod('get_closable');
+  }
 
   /// Checks if the window is minimizable.
-  Future<bool> minimizable() async => await WindowToolkit.instance._channel.invokeMethod('get_minimizable');
+  Future<bool> minimizable() async {
+    return await WindowToolkit.instance._channel.invokeMethod('get_minimizable');
+  }
 
   /// Checks if the window is currently minimized.
-  Future<bool> minimized() async => await WindowToolkit.instance._channel.invokeMethod('get_minimized');
+  Future<bool> minimized() async {
+    return await WindowToolkit.instance._channel.invokeMethod('get_minimized');
+  }
 
   /// Checks if the window is maximizable.
-  Future<bool> maximizable() async => await WindowToolkit.instance._channel.invokeMethod('get_maximizable');
+  Future<bool> maximizable() async {
+    return await WindowToolkit.instance._channel.invokeMethod('get_maximizable');
+  }
 
   /// Checks if the window is currently maximized.
-  Future<bool> maximized() async => await WindowToolkit.instance._channel.invokeMethod('get_maximized');
+  Future<bool> maximized() async {
+    return await WindowToolkit.instance._channel.invokeMethod('get_maximized');
+  }
 
   /// Checks if the window is movable.
-  Future<bool> movable() async => await WindowToolkit.instance._channel.invokeMethod('get_movable');
+  Future<bool> movable() async {
+    return await WindowToolkit.instance._channel.invokeMethod('get_movable');
+  }
 
   /// Checks if the window is currently in fullscreen mode.
-  Future<bool> fullscreen() async => await WindowToolkit.instance._channel.invokeMethod('get_fullscreen');
+  Future<bool> fullscreen() async {
+    return await WindowToolkit.instance._channel.invokeMethod('get_fullscreen');
+  }
 
   /// Retrieves the current opacity level of the window.
   ///
   /// Returns a `double` representing the window's opacity, where 1.0 is fully opaque.
-  Future<double> opacity() async => await WindowToolkit.instance._channel.invokeMethod('get_opacity');
+  Future<double> opacity() async {
+    return await WindowToolkit.instance._channel.invokeMethod('get_opacity');
+  }
 
   /// Retrieves the current bounds (position and size) of the window.
   ///
   /// Returns a `Rect` representing the window's position and size in the screen.
   Future<Rect> bounds() async {
-    Map<String, dynamic> arguments = {'devicePixelRatio': PlatformDispatcher.instance.views.first.devicePixelRatio};
-    Map<dynamic, dynamic> data = await WindowToolkit.instance._channel.invokeMethod('get_bounds', arguments);
+    Map<String, dynamic> arguments = {
+      'devicePixelRatio': PlatformDispatcher.instance.views.first.devicePixelRatio
+    };
+    Map<dynamic, dynamic> data =
+        await WindowToolkit.instance._channel.invokeMethod('get_bounds', arguments);
 
     return Rect.fromLTWH(data['x'], data['y'], data['width'], data['height']);
   }
@@ -282,10 +302,14 @@ class Perform {
   /// Expands the window to fill the entire screen, hiding the title bar and borders.
   /// This function will not execute if a maximumSize has been set for the window.
   Future<void> fullscreen() async {
+    Window? window = WindowToolkit.instance.currentWindow;
+
     // Check if maximumSize is defined and if it restricts the window size
-    Size? maxSize = WindowToolkit.instance.currentWindow!.maximumSize;
-    if (maxSize != null && (maxSize.width < double.infinity || maxSize.height < double.infinity)) {
-      throw Exception('Cannot enter fullscreen mode; maximum size is set for the window.');
+    if (window != null) {
+      Size? size = window.maximumSize;
+      if (size != null && (size.width < double.infinity || size.height < double.infinity)) {
+        throw Exception('Cannot enter fullscreen mode; maximum size is set for the window.');
+      }
     }
 
     // If the maximumSize condition is not met, proceed to toggle fullscreen

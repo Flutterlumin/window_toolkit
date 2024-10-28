@@ -129,6 +129,7 @@ public class WindowToolkitPlugin: NSObject, FlutterPlugin {
         default:
             result(FlutterMethodNotImplemented)
         }
+
     }
 
     public func _emitEvent(_ eventName: String) {
