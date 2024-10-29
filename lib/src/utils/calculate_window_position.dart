@@ -39,8 +39,12 @@ Future<Offset> calculateWindowPosition(Size size, Alignment alignment) async {
   );
 
   // Initialize visible dimensions and position
-  double visibleW = currentDisplay.visibleSize?.width ?? currentDisplay.size.width.toDouble();
-  double visibleH = currentDisplay.visibleSize?.height ?? currentDisplay.size.height.toDouble();
+  double visibleW = currentDisplay.visibleSize != null
+      ? currentDisplay.visibleSize!.width
+      : currentDisplay.size.width.toDouble();
+  double visibleH = currentDisplay.visibleSize != null
+      ? currentDisplay.visibleSize!.height
+      : currentDisplay.size.height.toDouble();
   double visibleStartX = currentDisplay.visiblePosition?.dx ?? 0.0;
   double visibleStartY = currentDisplay.visiblePosition?.dy ?? 0.0;
 
@@ -90,8 +94,13 @@ Future<Offset> calculateWindowPosition(Size size, Alignment alignment) async {
       visibleStartY + visibleH - size.height,
     );
   } else {
-    final left = (visibleW - size.width) / 2 + alignment.x * ((visibleW - size.width) / 2);
-    final top = (visibleH - size.height) / 2 + alignment.y * ((visibleH - size.height) / 2);
+    final double leftAdjustment = (visibleW - size.width) / 2;
+    final double leftOffset = alignment.x * leftAdjustment;
+    final double left = leftAdjustment + leftOffset;
+
+    final double topAdjustment = (visibleH - size.height) / 2;
+    final double topOffset = alignment.y * topAdjustment;
+    final top = topAdjustment + topOffset;
 
     position = Offset(visibleStartX + left, visibleStartY + top);
   }

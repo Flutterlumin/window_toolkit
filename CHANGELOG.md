@@ -1,3 +1,8 @@
+## 0.1.4
+
+- **Enhancements**:
+  - **Dart Formatting**: Updated code formatting in `WindowToolkit` and `calculateWindowPosition` to finally meet Dart standards.
+
 ## 0.1.3
 
 - **Enhancements**:

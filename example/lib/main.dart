@@ -108,13 +108,10 @@ class _HomeState extends State<Home> {
               'Maximize',
               () async {
                 bool isMaximized = await _toolkit.check.maximized();
-                isMaximized
-                    ? _toolkit.perform.unmaximize()
-                    : _toolkit.perform.maximize();
+                isMaximized ? _toolkit.perform.unmaximize() : _toolkit.perform.maximize();
               },
             ),
-            _buildActionButton(
-                'Fullscreen', () => _toolkit.perform.fullscreen()),
+            _buildActionButton('Fullscreen', () => _toolkit.perform.fullscreen()),
           ],
         ),
       ],
@@ -129,14 +126,12 @@ class _HomeState extends State<Home> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+            _buildToggleActionButton('Movable', _toolkit.define.movable, _toolkit.check.movable),
+            _buildToggleActionButton('Closable', _toolkit.define.closable, _toolkit.check.closable),
             _buildToggleActionButton(
-                'Movable', _toolkit.define.movable, _toolkit.check.movable),
+                'Minimizable', _toolkit.define.minimizable, _toolkit.check.minimizable),
             _buildToggleActionButton(
-                'Closable', _toolkit.define.closable, _toolkit.check.closable),
-            _buildToggleActionButton('Minimizable', _toolkit.define.minimizable,
-                _toolkit.check.minimizable),
-            _buildToggleActionButton('Maximizable', _toolkit.define.maximizable,
-                _toolkit.check.maximizable),
+                'Maximizable', _toolkit.define.maximizable, _toolkit.check.maximizable),
           ],
         ),
       ],
@@ -150,8 +145,8 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _buildToggleActionButton(String text,
-      Future<void> Function(bool) define, Future<bool> Function() check) {
+  Widget _buildToggleActionButton(
+      String text, Future<void> Function(bool) define, Future<bool> Function() check) {
     return FutureBuilder<bool>(
       future: check(),
       builder: (context, snapshot) {

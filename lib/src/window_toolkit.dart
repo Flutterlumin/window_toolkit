@@ -61,15 +61,31 @@ class WindowToolkit {
   /// Sets various window properties if specified.
   Future<void> window([Window? window]) async {
     if (window != null) {
-      if (window.movable != null) define.movable(window.movable!);
-      if (window.closable != null) define.closable(window.closable!);
-      if (window.minimizable != null) define.minimizable(window.minimizable!);
-      if (window.maximizable != null) define.maximizable(window.maximizable!);
-      if (window.center != null && window.center == true) define.align(Alignment.center);
-      if (window.opacity != null) define.opacity(window.opacity!);
+      if (window.movable != null) {
+        define.movable(window.movable!);
+      }
+      if (window.closable != null) {
+        define.closable(window.closable!);
+      }
+      if (window.minimizable != null) {
+        define.minimizable(window.minimizable!);
+      }
+      if (window.maximizable != null) {
+        define.maximizable(window.maximizable!);
+      }
+      if (window.center != null && window.center == true) {
+        define.align(Alignment.center);
+      }
+      if (window.opacity != null) {
+        define.opacity(window.opacity!);
+      }
       if (window.size != null) define.size(window.size!);
-      if (window.minimumSize != null) define.minimumSize(window.minimumSize!);
-      if (window.maximumSize != null) define.maximumSize(window.maximumSize!);
+      if (window.minimumSize != null) {
+        define.minimumSize(window.minimumSize!);
+      }
+      if (window.maximumSize != null) {
+        define.maximumSize(window.maximumSize!);
+      }
 
       // Set the current window
       _currentWindow = window;
@@ -89,12 +105,14 @@ class WindowToolkit {
 class Define {
   Define();
 
+  final MethodChannel _channel = WindowToolkit.instance._channel;
+
   /// Sets whether the window is movable by the user.
   ///
   /// The window can be dragged around the screen when `value` is set to `true`.
   Future<void> movable(bool value) async {
     Map<String, dynamic> argument = {'movable': value};
-    await WindowToolkit.instance._channel.invokeMethod('set_movable', argument);
+    await _channel.invokeMethod('set_movable', argument);
   }
 
   /// Sets whether the window can be closed by the user.
@@ -102,7 +120,7 @@ class Define {
   /// The window displays a close button and can be closed if `value` is set to `true`.
   Future<void> closable(bool value) async {
     Map<String, dynamic> argument = {'closable': value};
-    await WindowToolkit.instance._channel.invokeMethod('set_closable', argument);
+    await _channel.invokeMethod('set_closable', argument);
   }
 
   /// Sets whether the window can be minimized by the user.
@@ -110,7 +128,7 @@ class Define {
   /// The window displays a minimize button and can be minimized if `value` is `true`.
   Future<void> minimizable(bool value) async {
     Map<String, dynamic> argument = {'minimizable': value};
-    await WindowToolkit.instance._channel.invokeMethod('set_minimizable', argument);
+    await _channel.invokeMethod('set_minimizable', argument);
   }
 
   /// Sets whether the window can be maximized by the user.
@@ -118,7 +136,7 @@ class Define {
   /// When `value` is `true`, the window can be expanded to fill the screen.
   Future<void> maximizable(bool value) async {
     Map<String, dynamic> argument = {'maximizable': value};
-    await WindowToolkit.instance._channel.invokeMethod('set_maximizable', argument);
+    await _channel.invokeMethod('set_maximizable', argument);
   }
 
   /// Sets the window's opacity.
@@ -127,7 +145,7 @@ class Define {
   /// and 1.0 (completely opaque).
   Future<void> opacity(double value) async {
     Map<String, dynamic> argument = {'opacity': value};
-    await WindowToolkit.instance._channel.invokeMethod('set_opacity', argument);
+    await _channel.invokeMethod('set_opacity', argument);
   }
 
   /// Sets the maximum size of the window.
@@ -138,7 +156,7 @@ class Define {
       'width': size.width,
       'height': size.height,
     };
-    await WindowToolkit.instance._channel.invokeMethod('set_maximum_size', arguments);
+    await _channel.invokeMethod('set_maximum_size', arguments);
   }
 
   /// Sets the minimum size of the window.
@@ -149,7 +167,7 @@ class Define {
       'width': size.width,
       'height': size.height,
     };
-    await WindowToolkit.instance._channel.invokeMethod('set_minimum_size', arguments);
+    await _channel.invokeMethod('set_minimum_size', arguments);
   }
 
   /// Sets the bounds of the window, including position and size.
@@ -157,16 +175,22 @@ class Define {
   /// The `bounds` parameter specifies the area, `position` sets the top-left corner,
   /// `size` determines the window's width and height, and `animate` controls
   /// whether the change is animated.
-  Future<void> bounds(Rect? bounds, {Offset? position, Size? size, bool animate = false}) async {
+  Future<void> bounds(
+    Rect? bounds, {
+    Offset? position,
+    Size? size,
+    bool animate = false,
+  }) async {
+    FlutterView view = PlatformDispatcher.instance.views.first;
     Map<String, dynamic> arguments = {
-      'devicePixelRatio': PlatformDispatcher.instance.views.first.devicePixelRatio,
+      'devicePixelRatio': view.devicePixelRatio,
       'x': bounds?.topLeft.dx ?? position?.dx,
       'y': bounds?.topLeft.dy ?? position?.dy,
       'width': bounds?.size.width ?? size?.width,
       'height': bounds?.size.height ?? size?.height,
       'animate': animate,
     }..removeWhere((key, value) => value == null);
-    await WindowToolkit.instance._channel.invokeMethod('set_bounds', arguments);
+    await _channel.invokeMethod('set_bounds', arguments);
   }
 
   /// Sets the window's size to the specified width and height.
@@ -181,7 +205,9 @@ class Define {
   /// If `animate` is `true`, the centering action is animated.
   Future<void> center({bool animate = false}) async {
     Rect bound = await WindowToolkit.instance.check.bounds();
-    Offset position = await calculateWindowPosition(bound.size, Alignment.center);
+    Size size = bound.size;
+    Alignment center = Alignment.center;
+    Offset position = await calculateWindowPosition(size, center);
     await bounds(null, position: position, animate: animate);
   }
 
@@ -202,60 +228,69 @@ class Define {
 /// closable, minimizable, maximized, movable, in fullscreen mode, and more.
 class Check {
   Check();
+  static final MethodChannel _channel = WindowToolkit.instance._channel;
 
   /// Checks if the window is closable.
   Future<bool> closable() async {
-    return await WindowToolkit.instance._channel.invokeMethod('get_closable');
+    return await _channel.invokeMethod('get_closable');
   }
 
   /// Checks if the window is minimizable.
   Future<bool> minimizable() async {
-    return await WindowToolkit.instance._channel.invokeMethod('get_minimizable');
+    return await _channel.invokeMethod('get_minimizable');
   }
 
   /// Checks if the window is currently minimized.
   Future<bool> minimized() async {
-    return await WindowToolkit.instance._channel.invokeMethod('get_minimized');
+    return await _channel.invokeMethod('get_minimized');
   }
 
   /// Checks if the window is maximizable.
   Future<bool> maximizable() async {
-    return await WindowToolkit.instance._channel.invokeMethod('get_maximizable');
+    return await _channel.invokeMethod('get_maximizable');
   }
 
   /// Checks if the window is currently maximized.
   Future<bool> maximized() async {
-    return await WindowToolkit.instance._channel.invokeMethod('get_maximized');
+    return await _channel.invokeMethod('get_maximized');
   }
 
   /// Checks if the window is movable.
   Future<bool> movable() async {
-    return await WindowToolkit.instance._channel.invokeMethod('get_movable');
+    return await _channel.invokeMethod('get_movable');
   }
 
   /// Checks if the window is currently in fullscreen mode.
   Future<bool> fullscreen() async {
-    return await WindowToolkit.instance._channel.invokeMethod('get_fullscreen');
+    return await _channel.invokeMethod('get_fullscreen');
   }
 
   /// Retrieves the current opacity level of the window.
   ///
   /// Returns a `double` representing the window's opacity, where 1.0 is fully opaque.
   Future<double> opacity() async {
-    return await WindowToolkit.instance._channel.invokeMethod('get_opacity');
+    return await _channel.invokeMethod('get_opacity');
   }
 
   /// Retrieves the current bounds (position and size) of the window.
   ///
   /// Returns a `Rect` representing the window's position and size in the screen.
   Future<Rect> bounds() async {
+    FlutterView view = PlatformDispatcher.instance.views.first;
     Map<String, dynamic> arguments = {
-      'devicePixelRatio': PlatformDispatcher.instance.views.first.devicePixelRatio
+      'devicePixelRatio': view.devicePixelRatio,
     };
-    Map<dynamic, dynamic> data =
-        await WindowToolkit.instance._channel.invokeMethod('get_bounds', arguments);
+    Map<dynamic, dynamic> data = await _channel.invokeMethod(
+      'get_bounds',
+      arguments,
+    );
 
-    return Rect.fromLTWH(data['x'], data['y'], data['width'], data['height']);
+    return Rect.fromLTWH(
+      data['x'],
+      data['y'],
+      data['width'],
+      data['height'],
+    );
   }
 }
 
@@ -265,36 +300,37 @@ class Check {
 /// maximizing, closing, entering fullscreen, and dragging.
 class Perform {
   Perform();
+  static final MethodChannel _channel = WindowToolkit.instance._channel;
 
   /// Destroys the window.
   ///
   /// This action closes the window and removes it from memory.
   Future<void> destroy() async {
-    await WindowToolkit.instance._channel.invokeMethod('destroy');
+    await _channel.invokeMethod('destroy');
   }
 
   /// Closes the window.
   ///
   /// This action hides the window but does not destroy it, allowing it to be reopened.
   Future<void> close() async {
-    await WindowToolkit.instance._channel.invokeMethod('close');
+    await _channel.invokeMethod('close');
   }
 
   /// Minimizes the window.
   Future<void> minimize() async {
-    await WindowToolkit.instance._channel.invokeMethod('minimize');
+    await _channel.invokeMethod('minimize');
   }
 
   /// Maximizes the window.
   ///
   /// Expands the window to fill the available screen space.
   Future<void> maximize() async {
-    await WindowToolkit.instance._channel.invokeMethod('maximize');
+    await _channel.invokeMethod('maximize');
   }
 
   /// Restores the window to its original size if it is maximized.
   Future<void> unmaximize() async {
-    await WindowToolkit.instance._channel.invokeMethod('unmaximize');
+    await _channel.invokeMethod('unmaximize');
   }
 
   /// Toggles fullscreen mode for the window.
@@ -307,19 +343,22 @@ class Perform {
     // Check if maximumSize is defined and if it restricts the window size
     if (window != null) {
       Size? size = window.maximumSize;
-      if (size != null && (size.width < double.infinity || size.height < double.infinity)) {
-        throw Exception('Cannot enter fullscreen mode; maximum size is set for the window.');
+      double infinity = double.infinity;
+      if (size != null && (size.width < infinity || size.height < infinity)) {
+        throw Exception(
+          'Cannot enter fullscreen mode; maximum size is set for the window.',
+        );
       }
     }
 
     // If the maximumSize condition is not met, proceed to toggle fullscreen
-    await WindowToolkit.instance._channel.invokeMethod('fullscreen');
+    await _channel.invokeMethod('fullscreen');
   }
 
   /// Allows the user to drag the window around the screen.
   ///
   /// Enables dragging functionality on the title bar or other draggable areas.
   Future<void> drag() async {
-    await WindowToolkit.instance._channel.invokeMethod('drag');
+    await _channel.invokeMethod('drag');
   }
 }
