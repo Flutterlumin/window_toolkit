@@ -1,11 +1,21 @@
 import 'dart:ui';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:window_toolkit/src/titlebar.dart';
 import 'package:window_toolkit/src/utils/calculate_window_position.dart';
 import 'package:window_toolkit/src/window.dart';
+import 'package:window_toolkit/src/window_listener.dart';
 import 'package:window_toolkit/window_toolkit_platform_interface.dart';
 import 'package:flutter/material.dart';
+
+const kWindowEventFocus = 'focus';
+const kWindowEventBlur = 'blur';
+const kWindowEventMaximize = 'maximize';
+const kWindowEventUnmaximize = 'unmaximize';
+const kWindowEventRestore = 'restore';
+const kWindowEventEnterFullScreen = 'enter-full-screen';
+const kWindowEventLeaveFullScreen = 'leave-full-screen';
 
 /// A toolkit for managing window properties and appearance on macOS.
 ///
@@ -19,14 +29,10 @@ class WindowToolkit {
   /// Singleton instance of WindowToolkit.
   static final WindowToolkit instance = WindowToolkit._();
 
-  /// Provides functionalities to define window properties.
-  final Define define = Define();
-
-  /// Provides functionalities to check the state of various window properties.
-  final Check check = Check();
-
-  /// Provides functionalities to perform actions on the window.
-  final Perform perform = Perform();
+  /// Lazy initialization for `define`, `check`, and `perform` instances.
+  late final Define define = Define();
+  late final Check check = Check();
+  late final Perform perform = Perform();
 
   /// The communication channel for platform-specific window operations.
   final MethodChannel _channel = const MethodChannel('toolkit');
@@ -37,9 +43,47 @@ class WindowToolkit {
   /// Getter for the current window.
   Window? get currentWindow => _currentWindow;
 
+  final ObserverList<WindowListener> _listeners = ObserverList<WindowListener>();
+
   /// Handles incoming method calls from the platform.
   Future<void> _methodCallHandler(MethodCall call) async {
-    if (call.method != 'onEvent') throw UnimplementedError();
+    for (final WindowListener listener in listeners) {
+      if (!_listeners.contains(listener)) {
+        return;
+      }
+
+      if (call.method != 'onEvent') throw UnimplementedError();
+
+      String event = call.arguments['eventName'];
+      listener.onWindowEvent(event);
+      Map<String, Function> map = {
+        kWindowEventFocus: listener.onWindowFocus,
+        kWindowEventBlur: listener.onWindowBlur,
+        kWindowEventRestore: listener.onWindowRestore,
+        kWindowEventMaximize: listener.onWindowMaximize,
+        kWindowEventUnmaximize: listener.onWindowUnmaximize,
+        kWindowEventEnterFullScreen: listener.onWindowEnterFullScreen,
+        kWindowEventLeaveFullScreen: listener.onWindowLeaveFullScreen,
+      };
+      map[event]?.call();
+    }
+  }
+
+  List<WindowListener> get listeners {
+    List<WindowListener> localListeners = List<WindowListener>.from(_listeners);
+    return localListeners;
+  }
+
+  bool get hasListeners {
+    return _listeners.isNotEmpty;
+  }
+
+  void addListener(WindowListener listener) {
+    _listeners.add(listener);
+  }
+
+  void removeListener(WindowListener listener) {
+    _listeners.remove(listener);
   }
 
   /// Initializes the window toolkit.

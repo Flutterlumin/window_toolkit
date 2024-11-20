@@ -1,4 +1,13 @@
-## 0.1.4
+## 0.1.5
+
+- **Bug Fixes**:
+	- **Stack Overflow Error**: Resolved an issue where a recursive call in `WindowToolkit.instance` caused a stack overflow.
+  
+- **Features**:
+  - **StandardButtons**: Added detailed inline documentation to explain the functionality, state management, and interaction of the StandardButtons class.
+	- **MacosIconButton**: Documented the MacosIconButton class, describing its behavior, styling, and state-based feedback.
+
+## 0.1.5
 
 - **Enhancements**:
   - **Dart Formatting**: Updated code formatting in `WindowToolkit` and `calculateWindowPosition` to finally meet Dart standards.
