@@ -5,3 +5,4 @@ export 'src/titlebar.dart';
 export 'src/titlebar_style.dart';
 export 'src/window_toolkit.dart';
 export 'src/window.dart';
+export 'src/buttons/standard_buttons.dart';

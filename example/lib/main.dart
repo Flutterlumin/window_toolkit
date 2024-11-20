@@ -39,7 +39,6 @@ class _HomeState extends State<Home> {
     TextTheme texts = Theme.of(context).textTheme;
     Size size = MediaQuery.sizeOf(context);
     return Scaffold(
-      appBar: AppBar(),
       body: Center(
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: size.width / 1.2),
@@ -129,9 +128,15 @@ class _HomeState extends State<Home> {
             _buildToggleActionButton('Movable', _toolkit.define.movable, _toolkit.check.movable),
             _buildToggleActionButton('Closable', _toolkit.define.closable, _toolkit.check.closable),
             _buildToggleActionButton(
-                'Minimizable', _toolkit.define.minimizable, _toolkit.check.minimizable),
+              'Minimizable',
+              _toolkit.define.minimizable,
+              _toolkit.check.minimizable,
+            ),
             _buildToggleActionButton(
-                'Maximizable', _toolkit.define.maximizable, _toolkit.check.maximizable),
+              'Maximizable',
+              _toolkit.define.maximizable,
+              _toolkit.check.maximizable,
+            ),
           ],
         ),
       ],

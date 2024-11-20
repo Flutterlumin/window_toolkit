@@ -11,11 +11,23 @@ public class WindowToolkit: NSObject, NSWindowDelegate {
         set {
             _window = newValue
             _window?.delegate = self
+            configureWindow()
+
         }
     }
 
     override public init() {
         super.init()
+    }
+
+    private func configureWindow() {
+        guard let window = _window else { return }
+
+        // Configure initial properties to hide title bar
+        window.titleVisibility = .hidden
+        window.titlebarAppearsTransparent = true
+        window.styleMask.insert(.fullSizeContentView)  // Extend content to full size
+        window.collectionBehavior = [.managed]
     }
 
     public func titlebar(_ args: [String: Any]) {
@@ -24,6 +36,7 @@ public class WindowToolkit: NSObject, NSWindowDelegate {
         if style == "remove" {
             titlebarVisibility(false)
             standardWindowButton(false)
+
         } else if style == "hidden" {
             titlebarVisibility(false)
             standardWindowButton(true)
@@ -162,10 +175,43 @@ public class WindowToolkit: NSObject, NSWindowDelegate {
     public func maximize() { if !getMaximized() { window.zoom(nil) } }
     public func unmaximize() { if getMaximized() { window.zoom(nil) } }
     public func fullScreen() { window.toggleFullScreen(nil) }
+
     public func drag() {
         DispatchQueue.main.async {
             let inner: NSWindow = self.window
             if inner.currentEvent != nil { inner.performDrag(with: inner.currentEvent!) }
+        }
+    }
+
+    public func windowDidBecomeKey(_ notification: Notification) {
+        if window is NSPanel {
+            emitEvent("focus")
+        }
+    }
+
+    public func windowDidBecomeMain(_ notification: Notification) {
+        emitEvent("focus")
+    }
+
+    public func windowDidResignMain(_ notification: Notification) {
+        emitEvent("blur")
+    }
+
+    public func windowDidDeminiaturize(_ notification: Notification) {
+        emitEvent("restore")
+    }
+
+    public func windowDidEnterFullScreen(_ notification: Notification) {
+        emitEvent("enter-full-screen")
+    }
+
+    public func windowDidExitFullScreen(_ notification: Notification) {
+        emitEvent("leave-full-screen")
+    }
+
+    public func emitEvent(_ eventName: String) {
+        if onEvent != nil {
+            onEvent!(eventName)
         }
     }
 }
